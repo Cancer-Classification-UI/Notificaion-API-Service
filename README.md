@@ -1,2 +1,2 @@
-# Notificaion-API-Service
+# Notificaion API Service
 Handles notification logic
