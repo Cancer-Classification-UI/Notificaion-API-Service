@@ -1,5 +1,5 @@
 # Notification API Service
-This service is responsible for notification logic. Handles any communication needed to end users, such as emailing and sending SMS.
+This service is responsible for notification logic. Handles any communication to end users, such as emailing and sending SMS.
 
 API Documentation is created using the [Swagger](https://swagger.io/). The url for the Swagger UI is on the same port as the `APP_PORT` in the `.env` file at 
 
