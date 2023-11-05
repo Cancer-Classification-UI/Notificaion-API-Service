@@ -12,6 +12,7 @@ import (
 	_ "time"
 
 	test "ccu/api/test"
+	code "ccu/api/email"
 
 	log "github.com/sirupsen/logrus"
 
@@ -31,7 +32,7 @@ import (
 // @license.url     https://opensource.org/license/mit/
 // @BasePath  /api/v1
 func main() {
-	fmt.Println("Starting CDN-API microservice...")
+	fmt.Println("Starting Notification-API microservice...")
 	fmt.Println("No logs will be generated here. Please see log.txt file for logging")
 
 	CreateLog()
@@ -42,6 +43,7 @@ func main() {
 // Requests
 func handleRequests(r *mux.Router) {
 	r.HandleFunc("/api/v1/test-no-auth", test.GetTest).Methods("GET")
+	r.HandleFunc("/api/v1/send-code", code.PostSendCode).Methods("POST")
 }
 
 // Build log output file

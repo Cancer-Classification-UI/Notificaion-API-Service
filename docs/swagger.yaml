@@ -1,5 +1,12 @@
 basePath: /api/v1
 definitions:
+  model.SendCodeMessage:
+    properties:
+      date_created:
+        type: string
+      success:
+        type: boolean
+    type: object
   model.Test:
     properties:
       amount:
@@ -23,6 +30,41 @@ info:
   title: CDN API
   version: "1.0"
 paths:
+  /send-code:
+    post:
+      consumes:
+      - application/json
+      description: Connects to Google SMTP Server and sends an email with a 6 digit
+        code
+      parameters:
+      - description: email to send the code to
+        in: query
+        name: email
+        required: true
+        type: string
+      - description: code to send in the email
+        in: query
+        name: code
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.SendCodeMessage'
+            type: array
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Sends code to a user for verification
+      tags:
+      - Code
   /test-no-auth:
     get:
       consumes:
