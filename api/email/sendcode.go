@@ -1,22 +1,23 @@
 package auth
 
 import (
-	"net/http"
-	"time"
 	"fmt"
-	"net/smtp"
-    "strconv"
 	"io/ioutil"
+	"net/http"
+	"net/smtp"
+	"strconv"
 	"strings"
+	"time"
 
 	"ccu/api"
 	mAPI "ccu/model/api"
 
-	log "github.com/sirupsen/logrus"
 	"regexp"
+
+	log "github.com/sirupsen/logrus"
 )
 
-// PostPatientData godoc
+// PostSendCode godoc
 // @Summary      Sends code to a user for verification
 // @Description  Connects to Google SMTP Server and sends an email with a 6 digit code
 // @Tags         Code
@@ -30,6 +31,8 @@ import (
 // @Failure      500
 // @Router       /send-code [post]
 func PostSendCode(w http.ResponseWriter, r *http.Request) {
+	log.Info("In code sending handler -------------------------")
+
 	r.ParseForm()
 	if r.Method != http.MethodPost {
 		api.Respond(w, "Invalid request method", http.StatusMethodNotAllowed)
@@ -39,8 +42,8 @@ func PostSendCode(w http.ResponseWriter, r *http.Request) {
 	email := r.Form.Get("email")
 	code := r.Form.Get("code")
 
-	regex := regexp.MustCompile("^..*@.*.\\.(com|net|org|edu)$")
-	
+	regex := regexp.MustCompile(`^..*@.*.\\.(com|net|org|edu)$`)
+
 	if !regex.MatchString(email) {
 		api.Respond(w, "Invalid Email Parameter", http.StatusBadRequest)
 		return
@@ -51,10 +54,6 @@ func PostSendCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Info("In code sending handler -------------------------")
-
-    
-
 	response := mAPI.SendCodeMessage{
 		DateCreated: time.Now(),
 		Success:     SendCode(email, code),
@@ -64,47 +63,50 @@ func PostSendCode(w http.ResponseWriter, r *http.Request) {
 }
 
 func SendCode(email string, code string) bool {
-    // Define the SMTP server and authentication information
-    smtpServer := "smtp.gmail.com"
-    smtpPort := 587 // Use 587 with STARTTLS or 465 with SSL/TLS
-    senderEmail := "cancerclassificationproject@gmail.com"
-    senderPassword := "pdkz trbp jpwh bwjh"
+	// Define the SMTP server and authentication information
+	smtpServer := "smtp.gmail.com"
+	smtpPort := 587 // Use 587 with STARTTLS or 465 with SSL/TLS
+	senderEmail := "cancerclassificationproject@gmail.com"
+	senderPassword := "pdkz trbp jpwh bwjh"
 
 	// Specify the file path
-    filePath := "email.html"
+	filePath := "email.html"
 
-    // Read the file
-    content, err := ioutil.ReadFile(filePath)
-    if err != nil {
-        return false
-    }
+	// Read the file
+	content, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		log.Error("Error reading file: ", err)
+		return false
+	}
 
-    // Compose the email message
-    subject := "Your Security Code"
+	// Compose the email message
+	subject := "Your Security Code"
 	codeInt, err := strconv.Atoi(code)
-    if err != nil {
-        return false
-    }
-    codeStr := fmt.Sprintf("%06d", codeInt)
-    body := string(content)
+	if err != nil {
+		log.Error("Error converting code to int: ", err)
+		return false
+	}
+	codeStr := fmt.Sprintf("%06d", codeInt)
+	body := string(content)
 	body = strings.Replace(body, "XXXXXX", codeStr, -1)
 
-    // Set up the authentication for the SMTP server
-    auth := smtp.PlainAuth("", senderEmail, senderPassword, smtpServer)
+	// Set up the authentication for the SMTP server
+	auth := smtp.PlainAuth("", senderEmail, senderPassword, smtpServer)
 
-    // Compose the email message
-    message := "Subject: " + subject + "\r\n" +
-        "To: " + email + "\r\n" +
-        "Content-Type: text/html; charset=UTF-8\r\n\r\n" +
-        body
+	// Compose the email message
+	message := "Subject: " + subject + "\r\n" +
+		"To: " + email + "\r\n" +
+		"Content-Type: text/html; charset=UTF-8\r\n\r\n" +
+		body
 
-    // Connect to the SMTP server
-    smtpAddress := smtpServer + ":" + strconv.Itoa(smtpPort)
-    err = smtp.SendMail(smtpAddress, auth, senderEmail, []string{email}, []byte(message))
+	// Connect to the SMTP server
+	smtpAddress := smtpServer + ":" + strconv.Itoa(smtpPort)
+	err = smtp.SendMail(smtpAddress, auth, senderEmail, []string{email}, []byte(message))
 	log.Info(codeStr)
-    if err != nil {
-        return false
-    }
+	if err != nil {
+		log.Error("Error sending email: ", err)
+		return false
+	}
 
-    return true
+	return true
 }

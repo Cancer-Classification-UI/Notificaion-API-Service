@@ -11,8 +11,8 @@ import (
 	"syscall"
 	_ "time"
 
-	test "ccu/api/test"
 	code "ccu/api/email"
+	test "ccu/api/test"
 
 	log "github.com/sirupsen/logrus"
 
@@ -25,9 +25,9 @@ import (
 	_ "github.com/thedevsaddam/gojsonq"
 )
 
-// @title           CDN API
+// @title           Notification API
 // @version         1.0
-// @description     This service is responsible for content delivery. Handles content delivery to the user
+// @description     This service is responsible for notification logic. Handles sending messages to users.
 // @license.name    MIT License
 // @license.url     https://opensource.org/license/mit/
 // @BasePath  /api/v1
@@ -35,9 +35,9 @@ func main() {
 	fmt.Println("Starting Notification-API microservice...")
 	fmt.Println("No logs will be generated here. Please see log.txt file for logging")
 
-	CreateLog()
 	SetupLog()
 	SetupEndpoint()
+
 }
 
 // Requests

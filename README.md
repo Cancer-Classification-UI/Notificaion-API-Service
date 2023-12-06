@@ -1,4 +1,6 @@
 # Notification API Service
+[![Login API Image Deployment](https://github.com/Cancer-Classification-UI/Login-API-Service/actions/workflows/docker-image.yml/badge.svg?branch=main)](https://github.com/Cancer-Classification-UI/Login-API-Service/actions/workflows/docker-image.yml)
+
 This service is responsible for notification logic. Handles any communication to end users, such as emailing and sending SMS.
 
 API Documentation is created using the [Swagger](https://swagger.io/). The url for the Swagger UI is on the same port as the `APP_PORT` in the `.env` file at 
@@ -7,7 +9,7 @@ API Documentation is created using the [Swagger](https://swagger.io/). The url f
 http://<ip>:<APP_PORT>/swagger/index.html
 ``` 
 
-If you are running locally it would be at [http://127.0.0.1:8087/swagger/index.html](http://127.0.0.1:8087/swagger/index.html)
+If you are running locally it would be at [http://localhost:8087/swagger/index.html](http://localhost:8087/swagger/index.html)
 
 # How to run
 
@@ -41,7 +43,7 @@ You will need the swaggo package to create the swagger files.
 go install github.com/swaggo/swag/cmd/swag@latest
 ```
 
-### Docke (Optional)
+### Docker (Optional)
 If you want to use the docker containers provided (Recommended) [install docker](https://www.docker.com/get-started/). It also is required if you want to use the scripts.
 
 ## Build
@@ -50,7 +52,7 @@ If you want to use the docker containers provided (Recommended) [install docker]
 <br>
 
 ```bash
-docker build -t ccu-cdn-api .
+docker build -t ccu-notification-api .
 swag init
 ```
 </details>
@@ -80,7 +82,7 @@ Then run the docker image
 ```
 or manually with
 ```bash
-docker run -d -p $(cat .env | grep APP_PORT= | cut -d: -f2 | awk '/^/ { print $1":"$1 }') -v $(pwd)/log.txt:/usr/src/app/log.txt --name cdn-api ccu-cdn-api
+docker run -d -p $(cat .env | grep APP_PORT= | cut -d: -f2 | awk '/^/ { print $1":"$1 }') -v $(pwd)/log.txt:/usr/src/app/log.txt --name notification-api ccu-notification-api
 ```
 </details>
 
@@ -106,13 +108,13 @@ go mod tidy
 ### View Docker terminal or unmounted files
 If you launched the container using docker, you can execute a sh terminal inside the container to gain access to it and browse around.
 ```bash
-docker exec -it cdn-api /bin/sh
+docker exec -it notification-api /bin/sh
 ```
 >Leave the shell with `Ctrl+D`
 
 If you want to see the actual go service (the console the `go run ccu` command produces) then
 ```bash
-docker attach cdn-api
+docker attach notification-api
 ```
 > Be careful as it hard to detach as the key bind `Ctrl+P then Ctrl+D` is often used by many programs, so you may not be able to detach correctly.
 
@@ -123,7 +125,7 @@ If you want to fully shutdown the container
 ```
 or manually with
 ```bash
-docker kill cdn-api
-docker rm cdn-api
+docker kill notification-api
+docker rm notification-api
 ```
 

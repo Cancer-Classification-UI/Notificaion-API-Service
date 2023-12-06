@@ -3,5 +3,5 @@
 # BREAK THE IMAGE CAPTURE FOR THE REGISTRY
 cd "$(dirname "$0")"
 echo "Rebuilding image..."
-docker build -t ccu-cdn-api ../
+docker build -t ccu-notification-api ../
 ./restart.sh
