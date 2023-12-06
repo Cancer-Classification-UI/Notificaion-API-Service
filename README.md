@@ -1,5 +1,5 @@
 # Notification API Service
-[![Login API Image Deployment](https://github.com/Cancer-Classification-UI/Login-API-Service/actions/workflows/docker-image.yml/badge.svg?branch=main)](https://github.com/Cancer-Classification-UI/Login-API-Service/actions/workflows/docker-image.yml)
+[![Notification API Image Deployment](https://github.com/Cancer-Classification-UI/Notification-API-Service/actions/workflows/docker-image.yml/badge.svg?branch=main)](https://github.com/Cancer-Classification-UI/Notification-API-Service/actions/workflows/docker-image.yml)
 
 This service is responsible for notification logic. Handles any communication to end users, such as emailing and sending SMS.
 
